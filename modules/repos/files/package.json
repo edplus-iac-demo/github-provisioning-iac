@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "git-cz": "^4.9.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  },
+  "scripts": {
+    "prepare": "git config --local include.path ../.gitconfig && git config core.hooksPath .husky && chmod -R +x .husky || true"
+  }
+}
