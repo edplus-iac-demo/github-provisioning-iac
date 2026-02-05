@@ -1,1 +1,2 @@
 name,visibility,description,frontend,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
+test-repo-1,public,"This is a test repository",true,nonprod-1234,NonProd AWS Account,prod-5678,Prod AWS Account,1000 USD,JIRA-1234,Portfolio A
