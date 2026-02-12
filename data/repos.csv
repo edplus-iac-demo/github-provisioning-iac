@@ -1,2 +1,3 @@
 name,visibility,description,frontend,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
 test-repo-1,public,test-repo-one,false,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
+test-repo-2,punlic,test-repo-two,true,123333311,test-nonprod-two,131331331,test-prod-two,0,EPBESOL,testing-portfolio
