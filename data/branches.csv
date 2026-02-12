@@ -1,1 +1,2 @@
 repo,branch,minPRCount,users,teams,codeOwnerReviewRequired
+test-repo-2,main,3,,,false
