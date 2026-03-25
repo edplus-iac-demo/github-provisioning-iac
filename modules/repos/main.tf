@@ -458,7 +458,7 @@ resource "github_actions_secret" "oidc_role_common_name" {
 }
 
 resource "github_repository_file" "infra_cicd" {
-  for_each         = { for rb_key, rb in local.default_repo_branches : rb.repo => rb if rb.frontend == true }
+  for_each         = { for rb_key, rb in local.default_repo_branches : "${rb.repo}:${rb.branch}" => rb if rb.frontend == true }
   repository       = each.value.repo
   branch              = each.value.branch
   file                = ".github/workflows/deploy-infra.yml"
