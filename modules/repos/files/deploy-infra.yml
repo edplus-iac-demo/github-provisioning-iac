@@ -41,6 +41,9 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./infra-setup
     outputs:
       state_key: ${{ steps.compose.outputs.STATE_KEY }}
       plan_artifact: ${{ steps.upload.outputs.name }}
@@ -114,6 +117,9 @@ jobs:
     name: Apply
     needs: plan
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./infra-setup
     environment: admin
     steps:
       - name: Checkout
