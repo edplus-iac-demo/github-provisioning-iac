@@ -127,7 +127,8 @@ resource "github_repository_custom_property" "accounts-details" {
   property_type  = "string"
   depends_on     = [github_repository.repos]
   lifecycle {
-    ignore_changes = [property_value]
+    ignore_changes = all
+    prevent_destroy = true
   }
 }
 
