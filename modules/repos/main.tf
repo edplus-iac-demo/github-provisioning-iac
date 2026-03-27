@@ -445,6 +445,7 @@ resource "github_actions_secret" "maroon_oidc_role" {
     ignore_changes = all
     prevent_destroy = true
   }
+  depends_on = [ github_repository.repos, github_branch.default ]
 }
 
 resource "github_actions_secret" "maroon_state_bucket" {
@@ -456,6 +457,7 @@ resource "github_actions_secret" "maroon_state_bucket" {
     ignore_changes = all
     prevent_destroy = true
   }
+  depends_on = [ github_repository.repos, github_branch.default ]
 }
 
 resource "github_actions_secret" "oidc_role_common_name" {
@@ -467,6 +469,7 @@ resource "github_actions_secret" "oidc_role_common_name" {
     ignore_changes = all
     prevent_destroy = true
   }
+  depends_on = [ github_repository.repos, github_branch.default ]
 }
 
 resource "github_repository_file" "infra_cicd" {
