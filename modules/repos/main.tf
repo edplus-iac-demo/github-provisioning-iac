@@ -493,6 +493,6 @@ resource "github_repository_environment" "edpl-admins" {
   repository = each.value.name
   environment = "edpl-admins"
   reviewers {
-    teams = ["edpl-admins"]
+    teams = "edpl-admins".id
   }
 }
