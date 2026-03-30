@@ -1,4 +1,4 @@
-name,visibility,description,frontend,iac-setup,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
+name,visibility,description,frontend,iac_setup,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
 test-repo-1,public,test-repo-one,false,no,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 test-repo-2,public,test-repo-two,true,no,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 test-repo-3,public,test-repo-three,true,no,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
