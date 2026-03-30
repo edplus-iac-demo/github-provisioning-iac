@@ -9,9 +9,9 @@ locals {
     for rb in flatten([
       for repo in var.repos : [
         for b in local.default_branches : {
-          repo     = repo.name
-          branch   = b
-          frontend = repo.frontend
+          repo      = repo.name
+          branch    = b
+          frontend  = repo.frontend
           iac_setup = repo.iac_setup
         }
       ]
@@ -89,12 +89,12 @@ locals {
     for pair in flatten([
       for rb in local.main_repo_branches : [
         for f in fileset("${path.module}/infra-setup", "**/*") : {
-          key     = "${rb.repo}:${rb.branch}:${f}"
-          repo    = rb.repo
-          frontend = rb.frontend
+          key       = "${rb.repo}:${rb.branch}:${f}"
+          repo      = rb.repo
+          frontend  = rb.frontend
           iac_setup = rb.iac_setup
-          file    = "infra-setup/${f}"
-          content = file("${path.module}/infra-setup/${f}")
+          file      = "infra-setup/${f}"
+          content   = file("${path.module}/infra-setup/${f}")
         }
       ]
     ]) : pair.key => pair
@@ -111,9 +111,9 @@ resource "github_repository" "repos" {
   visibility         = each.value.visibility
   description        = each.value.description
   allow_rebase_merge = false
-  auto_init          = true   
+  auto_init          = true
   lifecycle {
-    ignore_changes = all
+    ignore_changes  = all
     prevent_destroy = true
   }
 }
@@ -159,7 +159,7 @@ resource "github_repository_file" "prettier_config" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -173,7 +173,7 @@ resource "github_repository_file" "lintstagedrc" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -187,7 +187,7 @@ resource "github_repository_file" "pre_commit" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -201,7 +201,7 @@ resource "github_repository_file" "prepare_commit_msg" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -215,7 +215,7 @@ resource "github_repository_file" "package_json" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -229,7 +229,7 @@ resource "github_repository_file" "gitignore" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -243,7 +243,7 @@ resource "github_repository_file" "gitconfig" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -268,7 +268,7 @@ resource "github_repository_file" "html_file" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes  = [content]
     prevent_destroy = true
   }
 }
@@ -291,7 +291,7 @@ resource "github_repository_file" "infra_setup" {
 # ---------------------------
 resource "null_resource" "main_files_ready" {
   triggers = {
-    repos = join(",", sort(keys(local.main_repo_branches)))
+    repos      = join(",", sort(keys(local.main_repo_branches)))
     files_hash = md5(local._main_files_concat)
   }
 
@@ -316,7 +316,7 @@ resource "github_branch" "default" {
   source_branch = "main"
   depends_on    = [github_repository.repos, null_resource.main_files_ready]
   lifecycle {
-    ignore_changes = all
+    ignore_changes  = all
     prevent_destroy = true
   }
 }
@@ -438,41 +438,41 @@ resource "github_branch_protection_v3" "default_branch_protection" {
 }
 
 resource "github_actions_secret" "infra_oidc_role" {
-  for_each           = { for r in var.repos : r.name => r if r.iac_setup == true }
+  for_each        = { for r in var.repos : r.name => r if r.iac_setup == true }
   secret_name     = "INFRA_OIDC_ROLE"
   repository      = each.value.name
   plaintext_value = var.infra_oidc_role
   lifecycle {
     ignore_changes = all
   }
-  depends_on = [ github_repository.repos, github_branch.default ]
+  depends_on = [github_repository.repos, github_branch.default]
 }
 
 resource "github_actions_secret" "infra_state_bucket" {
-  for_each           = { for r in var.repos : r.name => r if r.iac_setup == true }
+  for_each        = { for r in var.repos : r.name => r if r.iac_setup == true }
   secret_name     = "INFRA_STATE_BUCKET"
   repository      = each.value.name
   plaintext_value = var.infra_state_bucket
   lifecycle {
     ignore_changes = all
   }
-  depends_on = [ github_repository.repos, github_branch.default ]
+  depends_on = [github_repository.repos, github_branch.default]
 }
 
 resource "github_actions_secret" "oidc_role_common_name" {
-  for_each           = { for r in var.repos : r.name => r if r.iac_setup == true }
+  for_each        = { for r in var.repos : r.name => r if r.iac_setup == true }
   secret_name     = "OIDC_ROLE_COMMON_NAME"
   repository      = each.value.name
   plaintext_value = var.oidc_role_common_name
   lifecycle {
     ignore_changes = all
   }
-  depends_on = [ github_repository.repos, github_branch.default ]
+  depends_on = [github_repository.repos, github_branch.default]
 }
 
 resource "github_repository_file" "infra_cicd" {
-  for_each         = { for rb_key, rb in local.default_repo_branches : "${rb.repo}:${rb.branch}" => rb if rb.iac_setup == true }
-  repository       = each.value.repo
+  for_each            = { for rb_key, rb in local.default_repo_branches : "${rb.repo}:${rb.branch}" => rb if rb.iac_setup == true }
+  repository          = each.value.repo
   branch              = each.value.branch
   file                = ".github/workflows/deploy-infra.yml"
   content             = file("${path.module}/files/deploy-infra.yml")
@@ -483,15 +483,15 @@ resource "github_repository_file" "infra_cicd" {
   }
 }
 
-data "github_team" "edpl-admins" {
+data "github_team" "edpl_admins" {
   slug = "edpl-admins"
 }
 
-resource "github_repository_environment" "edpl-admins" {
-  for_each   = { for r in var.repos : r.name => r if r.iac_setup == true }
-  repository = each.value.name
+resource "github_repository_environment" "edpl_admins" {
+  for_each    = { for r in var.repos : r.name => r if r.iac_setup == true }
+  repository  = each.value.name
   environment = "edpl-admins"
   reviewers {
-    teams = [data.github_team.edpl-admins.id]
+    teams = [data.github_team.edpl_admins.id]
   }
 }
