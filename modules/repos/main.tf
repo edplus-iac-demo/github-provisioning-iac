@@ -283,7 +283,6 @@ resource "github_repository_file" "infra_setup" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes = [content]
-    prevent_destroy = true
   }
 }
 
@@ -445,7 +444,6 @@ resource "github_actions_secret" "infra_oidc_role" {
   plaintext_value = var.infra_oidc_role
   lifecycle {
     ignore_changes = all
-    prevent_destroy = true
   }
   depends_on = [ github_repository.repos, github_branch.default ]
 }
@@ -457,7 +455,6 @@ resource "github_actions_secret" "infra_state_bucket" {
   plaintext_value = var.infra_state_bucket
   lifecycle {
     ignore_changes = all
-    prevent_destroy = true
   }
   depends_on = [ github_repository.repos, github_branch.default ]
 }
@@ -484,7 +481,6 @@ resource "github_repository_file" "infra_cicd" {
   depends_on          = [github_repository.repos, github_branch.default]
   lifecycle {
     ignore_changes = [content]
-    prevent_destroy = true
   }
 }
 
