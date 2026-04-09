@@ -8,3 +8,4 @@ test-repo-6,public,test-repo-six,true,false,123456789,test-nonprod,123456689,tes
 test-repo-7,public,test-repo-seven,true,false,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 test-repo-8,public,test-repo-eight,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 landing-page,public,landing-page,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
+visualizer-app,public,visualizer-app,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
