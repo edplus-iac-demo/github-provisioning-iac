@@ -9,3 +9,4 @@ test-repo-7,public,test-repo-seven,true,false,123456789,test-nonprod,123456689,t
 test-repo-8,public,test-repo-eight,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 landing-page,public,landing-page,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
 visualizer-app,public,visualizer-app,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
+edplus-iac-demo-repo,public,edplus-iac-demo-repo,true,true,123456789,test-nonprod,123456689,test-prod,0,EPBESOL,test-portfolio
