@@ -550,6 +550,7 @@ resource "github_repository_environment" "iac" {
   reviewers {
     teams = [data.github_team.edpl_admins.id]
   }
+  depends_on = [ github_branch.default ]
 }
 
 resource "github_repository_environment_deployment_policy" "iac" {
