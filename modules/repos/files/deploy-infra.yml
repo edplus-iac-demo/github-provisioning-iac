@@ -3,9 +3,6 @@ name: deploy-infra
 on:
   workflow_dispatch:
     inputs:
-      aws_account_id:
-        description: 'AWS account ID'
-        required: true
       s3_bucket_name:
         description: 'S3 bucket name'
         required: true
@@ -37,13 +34,15 @@ permissions:
   id-token: write
 
 env:
-  INFRA_OIDC_ROLE: ${{ secrets.INFRA_OIDC_ROLE }}       
+  DEPLOY_ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'nonprod-qa' && 'qa' || github.ref_name == 'nonprod' && 'dev' || '' }}
+  INFRA_OIDC_ROLE: ${{ secrets.INFRA_OIDC_ROLE }}
   INFRA_STATE_BUCKET: ${{ secrets.INFRA_STATE_BUCKET }}
 
 jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
+    environment: ${{ env.DEPLOY_ENVIRONMENT }}
     defaults:
       run:
         working-directory: ./infra-setup
@@ -51,6 +50,8 @@ jobs:
       state_key: ${{ steps.compose.outputs.STATE_KEY }}
       plan_artifact: ${{ steps.upload.outputs.name }}
       role_arn: ${{ steps.compose-role.outputs.role_arn }}
+    env:
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
 
     steps:
       - name: Checkout
@@ -74,13 +75,13 @@ jobs:
       - name: Compose backend key
         id: compose
         run: |
-          KEY="${{ github.event.inputs.aws_account_id }}-${{ github.event.inputs.s3_bucket_name }}/terraform.tfstate"
+          KEY="${AWS_ACCOUNT_ID}-${{ github.event.inputs.s3_bucket_name }}/terraform.tfstate"
           echo "STATE_KEY=${KEY}" >> $GITHUB_OUTPUT
 
       - name: Compose OIDC role ARN for target account
         id: compose-role
         run: |
-          ROLE_ARN="arn:aws:iam::${{ github.event.inputs.aws_account_id}}:role/${{ secrets.OIDC_ROLE_COMMON_NAME }}"
+          ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${{ secrets.OIDC_ROLE_COMMON_NAME }}"
           echo "role_arn=${ROLE_ARN}" >> $GITHUB_OUTPUT
 
       - name: Setup Terraform CLI
@@ -121,10 +122,10 @@ jobs:
     name: Apply
     needs: plan
     runs-on: ubuntu-latest
+    environment: ${{ env.DEPLOY_ENVIRONMENT }}
     defaults:
       run:
         working-directory: ./infra-setup
-    environment: edpl-admins
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.1

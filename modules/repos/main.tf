@@ -100,6 +100,62 @@ locals {
     ]) : pair.key => pair
   }
 
+  iac_repo_environments = {
+    for env in flatten([
+      for repo in var.repos : [
+        {
+          key            = "${repo.name}:dev"
+          repository     = repo.name
+          environment    = "dev"
+          aws_account_id = repo.aws-nonprod
+          iac_setup      = repo.iac_setup
+        },
+        {
+          key            = "${repo.name}:qa"
+          repository     = repo.name
+          environment    = "qa"
+          aws_account_id = repo.aws-nonprod
+          iac_setup      = repo.iac_setup
+        },
+        {
+          key            = "${repo.name}:prod"
+          repository     = repo.name
+          environment    = "prod"
+          aws_account_id = repo.aws-prod
+          iac_setup      = repo.iac_setup
+        }
+      ]
+    ]) : env.key => env if env.iac_setup == true
+  }
+
+  iac_repo_environment_deployment_policies = {
+    for policy in flatten([
+      for repo in var.repos : [
+        {
+          key              = "${repo.name}:dev:nonprod"
+          repository       = repo.name
+          environment_name = "dev"
+          branch_pattern   = "nonprod"
+          iac_setup        = repo.iac_setup
+        },
+        {
+          key              = "${repo.name}:qa:nonprod-qa"
+          repository       = repo.name
+          environment_name = "qa"
+          branch_pattern   = "nonprod-qa"
+          iac_setup        = repo.iac_setup
+        },
+        {
+          key              = "${repo.name}:prod:main"
+          repository       = repo.name
+          environment_name = "prod"
+          branch_pattern   = "main"
+          iac_setup        = repo.iac_setup
+        }
+      ]
+    ]) : policy.key => policy if policy.iac_setup == true
+  }
+
 }
 
 # ---------------------------
@@ -487,11 +543,28 @@ data "github_team" "edpl_admins" {
   slug = "edpl-admins"
 }
 
-resource "github_repository_environment" "edpl_admins" {
-  for_each    = { for r in var.repos : r.name => r if r.iac_setup == true }
-  repository  = each.value.name
-  environment = "edpl-admins"
+resource "github_repository_environment" "iac" {
+  for_each    = local.iac_repo_environments
+  repository  = each.value.repository
+  environment = each.value.environment
   reviewers {
     teams = [data.github_team.edpl_admins.id]
   }
+}
+
+resource "github_repository_environment_deployment_policy" "iac" {
+  for_each         = local.iac_repo_environment_deployment_policies
+  repository       = each.value.repository
+  environment      = each.value.environment_name
+  branch_pattern   = each.value.branch_pattern
+  depends_on       = [github_repository_environment.iac]
+}
+
+resource "github_actions_environment_variable" "aws_account_id" {
+  for_each      = local.iac_repo_environments
+  repository    = each.value.repository
+  environment   = each.value.environment
+  variable_name = "AWS_ACCOUNT_ID"
+  value         = each.value.aws_account_id
+  depends_on    = [github_repository_environment.iac]
 }
