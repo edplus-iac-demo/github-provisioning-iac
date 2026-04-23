@@ -170,7 +170,7 @@ resource "github_repository" "repos" {
   auto_init          = true
   lifecycle {
     ignore_changes  = all
-    prevent_destroy = true
+    
   }
 }
 
@@ -216,7 +216,7 @@ resource "github_repository_file" "prettier_config" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -230,7 +230,7 @@ resource "github_repository_file" "lintstagedrc" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -244,7 +244,7 @@ resource "github_repository_file" "pre_commit" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -258,7 +258,7 @@ resource "github_repository_file" "prepare_commit_msg" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -272,7 +272,7 @@ resource "github_repository_file" "package_json" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -286,7 +286,7 @@ resource "github_repository_file" "gitignore" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -300,7 +300,7 @@ resource "github_repository_file" "gitconfig" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -325,7 +325,7 @@ resource "github_repository_file" "html_file" {
   depends_on          = [github_repository.repos]
   lifecycle {
     ignore_changes  = [content]
-    prevent_destroy = true
+    
   }
 }
 
@@ -373,7 +373,7 @@ resource "github_branch" "default" {
   depends_on    = [github_repository.repos, null_resource.main_files_ready]
   lifecycle {
     ignore_changes  = all
-    prevent_destroy = true
+    
   }
 }
 
