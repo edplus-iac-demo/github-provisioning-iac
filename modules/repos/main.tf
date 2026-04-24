@@ -169,8 +169,8 @@ resource "github_repository" "repos" {
   allow_rebase_merge = false
   auto_init          = true
   lifecycle {
-    ignore_changes  = all
-    
+    ignore_changes = all
+
   }
 }
 
@@ -215,8 +215,8 @@ resource "github_repository_file" "prettier_config" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -229,8 +229,8 @@ resource "github_repository_file" "lintstagedrc" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -243,8 +243,8 @@ resource "github_repository_file" "pre_commit" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -257,8 +257,8 @@ resource "github_repository_file" "prepare_commit_msg" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -271,8 +271,8 @@ resource "github_repository_file" "package_json" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -285,8 +285,8 @@ resource "github_repository_file" "gitignore" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -299,8 +299,8 @@ resource "github_repository_file" "gitconfig" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -324,8 +324,8 @@ resource "github_repository_file" "html_file" {
   overwrite_on_create = true
   depends_on          = [github_repository.repos]
   lifecycle {
-    ignore_changes  = [content]
-    
+    ignore_changes = [content]
+
   }
 }
 
@@ -372,8 +372,8 @@ resource "github_branch" "default" {
   source_branch = "main"
   depends_on    = [github_repository.repos, null_resource.main_files_ready]
   lifecycle {
-    ignore_changes  = all
-    
+    ignore_changes = all
+
   }
 }
 
@@ -547,18 +547,22 @@ resource "github_repository_environment" "iac" {
   for_each    = local.iac_repo_environments
   repository  = each.value.repository
   environment = each.value.environment
+  deployment_branch_policy {
+    protected_branches     = false
+    custom_branch_policies = true
+  }
   reviewers {
     teams = [data.github_team.edpl_admins.id]
   }
-  depends_on = [ github_branch.default ]
+  depends_on = [github_branch.default]
 }
 
 resource "github_repository_environment_deployment_policy" "iac" {
-  for_each         = local.iac_repo_environment_deployment_policies
-  repository       = each.value.repository
-  environment      = each.value.environment_name
-  branch_pattern   = each.value.branch_pattern
-  depends_on       = [github_repository_environment.iac]
+  for_each       = local.iac_repo_environment_deployment_policies
+  repository     = each.value.repository
+  environment    = each.value.environment_name
+  branch_pattern = each.value.branch_pattern
+  depends_on     = [github_repository_environment.iac]
 }
 
 resource "github_actions_environment_variable" "aws_account_id" {
