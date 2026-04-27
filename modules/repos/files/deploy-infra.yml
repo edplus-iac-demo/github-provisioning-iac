@@ -42,7 +42,7 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
-    environment: ${{ env.DEPLOY_ENVIRONMENT }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'nonprod-qa' && 'qa' || github.ref_name == 'nonprod' && 'dev' || '' }}
     defaults:
       run:
         working-directory: ./infra-setup
@@ -122,7 +122,7 @@ jobs:
     name: Apply
     needs: plan
     runs-on: ubuntu-latest
-    environment: ${{ env.DEPLOY_ENVIRONMENT }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'nonprod-qa' && 'qa' || github.ref_name == 'nonprod' && 'dev' || '' }}
     defaults:
       run:
         working-directory: ./infra-setup
