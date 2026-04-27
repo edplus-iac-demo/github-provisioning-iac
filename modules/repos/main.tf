@@ -109,6 +109,7 @@ locals {
           environment    = "dev"
           aws_account_id = repo.aws-nonprod
           iac_setup      = repo.iac_setup
+          enabled        = trimspace(repo.aws-nonprod) != ""
         },
         {
           key            = "${repo.name}:qa"
@@ -116,6 +117,7 @@ locals {
           environment    = "qa"
           aws_account_id = repo.aws-nonprod
           iac_setup      = repo.iac_setup
+          enabled        = trimspace(repo.aws-nonprod) != ""
         },
         {
           key            = "${repo.name}:prod"
@@ -123,9 +125,10 @@ locals {
           environment    = "prod"
           aws_account_id = repo.aws-prod
           iac_setup      = repo.iac_setup
+          enabled        = trimspace(repo.aws-prod) != ""
         }
       ]
-    ]) : env.key => env if env.iac_setup == true
+    ]) : env.key => env if env.iac_setup == true && env.enabled
   }
 
   iac_repo_environment_deployment_policies = {
@@ -137,6 +140,7 @@ locals {
           environment_name = "dev"
           branch_pattern   = "nonprod"
           iac_setup        = repo.iac_setup
+          enabled          = trimspace(repo.aws-nonprod) != ""
         },
         {
           key              = "${repo.name}:qa:nonprod-qa"
@@ -144,6 +148,7 @@ locals {
           environment_name = "qa"
           branch_pattern   = "nonprod-qa"
           iac_setup        = repo.iac_setup
+          enabled          = trimspace(repo.aws-nonprod) != ""
         },
         {
           key              = "${repo.name}:prod:main"
@@ -151,9 +156,10 @@ locals {
           environment_name = "prod"
           branch_pattern   = "main"
           iac_setup        = repo.iac_setup
+          enabled          = trimspace(repo.aws-prod) != ""
         }
       ]
-    ]) : policy.key => policy if policy.iac_setup == true
+    ]) : policy.key => policy if policy.iac_setup == true && policy.enabled
   }
 
 }
