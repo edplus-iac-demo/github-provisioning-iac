@@ -1,2 +1,2 @@
 name,visibility,description,frontend,iac_setup,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
-landing-page-repo,public,Test-Scenario-1,true,true,nonprod-landing-page-acc,345023451235,prod-landing-page-acc,345023451236,CS3333-RT3212,url-to-jira-board,optional
+spring-course-registration,public,Landing page for Spring Course Registration,true,true,872559198465,asu-edplus-black-nonprod,,,,
