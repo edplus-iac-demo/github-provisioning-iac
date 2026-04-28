@@ -1,2 +1,2 @@
 name,visibility,description,frontend,iac_setup,aws-nonprod,aws-nonprod-name,aws-prod,aws-prod-name,budget-info,jira-board,portfolio-detail
-cs-course-registration,public,Landing page for CS Course Registration,true,true,872559198465,asu-edplus-black-nonprod,,,,,
+online-course-registration,public,Landing page for Online Course Registration,true,true,872559198465,asu-edplus-black-nonprod,,,,,
